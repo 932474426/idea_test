@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link href="css/login.css" rel="stylesheet" type="text/css">
+<script src="js/jquery-2.1.1.js" type="text/javascript" charset="UTF-8"></script>
+</head>
+<body>
+<div id="sky"></div>
+<div id="head"></div>
+<div id="middle">
+<form id="myform" th:action="@{/getinfo}" method="post">
+<ul style="text-align: center;">
+<li style="font-size: 24px">程序员管理系统</li>
+<li><input class="name" id="email" name="email" placeholder="请输入邮箱" onkeyup="checkEmail()"></li>
+<span id="point1">&nbsp;</span>
+<li><input type="password" id="new_password" name="new_password" class="pwd" placeholder="请输入密码" onkeyup="checknewpassword()"/></li>
+<span id="point2">&nbsp;</span>
+<li><input type="password" id="confirm_password" name="confirm_password" class="pwd" placeholder="确定新密码" onkeyup="checkrepassword()"/></li>
+<span id="point3">&nbsp;</span>
+<li id="verifyCode" style="display: block;"><input id="valid" name="verifyCodeActual" placeholder="请输入验证码" onkeyup="checkverify()" maxlength="4">
+<span id="validcode">
+            <img id="captcha_img" alt="点击更换" title="点击更换"
+                 onclick="refresh()" src="/kaptcha" />
+</span></li>
+<span id="point4">&nbsp;</span>
+<li><span th:text="${message}?:''"></span>&nbsp;</li>
+<li><button id="login" th:text="立即注册"></button></li>
+<li><span th:text="${success}?:''"></span>&nbsp;</li>
+</ul>
+</form>
+</div>
+<div id="footer">
+</div>
+<div id="cloud"></div>
+</body>
+<script type="text/javascript">
+    // 注册按钮默认不可点击
+    document.getElementById("login").disabled = true;
+    var i1=0,i2=0,i3=0,i4=0;
+    // 验证邮箱
+    function checkEmail(){
+        var e = document.getElementById("email").value;
+        if(e=="")
+        {
+            document.getElementById("point1").innerHTML="<font color='red'>邮箱不能为空!</font>";
+            i1=0;
+        }
+        else
+        {
+            reg=/^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/gi;
+            if(!reg.test(e))
+            {
+                document.getElementById("point1").innerHTML="<font color='red'>邮箱格式有误!</font>";
+                i1=0;
+            }
+            else
+            {
+                document.getElementById("point1").innerHTML="<font color='green'>邮箱格式正确！</font>";
+                i1=1;
+            }
+        }
+        checkAll();
+    }
+    // 验证密码
+    function checknewpassword() {
+        var password = document.getElementById("new_password").value;
+        console.log(password);
+        if(password == "") {
+            console.log("空空如也")
+
+            document.getElementById("point2").innerHTML="<font color='red'>密码不能为空!</font>";
+              i2=0;
+
+        }else {
+            document.getElementById("point2").innerHTML="<font color='red'>密码正确！</font>";
+            i2=1;
+        }
+        checkAll();
+    }
+    // 验证第二次输入密码
+    function checkrepassword() {
+        var password = document.getElementById("new_password").value;
+        var repassword = document.getElementById("confirm_password").value;
+        console.log(repassword);
+        if (repassword=="")
+        {
+            document.getElementById("point3").innerHTML="<font color='green'>密码不能为空！</font>";
+            i3=0;
+        }
+        else if(password == repassword) {
+            document.getElementById("point3").innerHTML="<font color='green'>两次密码输入一致！</font>";
+            i3=1;
+
+        }else {
+            document.getElementById("point3").innerHTML="<font color='red'>两次输入密码不一致!</font>";
+            i3=0;
+        }
+        checkAll();
+    }
+    // 校检验证码
+    function checkverify() {
+        var valid= document.getElementById("valid").value;
+        console.log(valid);
+        if(valid == "") {
+            document.getElementById("point4").innerHTML="<font color='green'>验证码不能为空！</font>";
+            i4=0;
+
+        }else {
+            document.getElementById("point4").innerHTML="<font color='red'>&nbsp;</font>";
+            i4=1;
+        }
+        checkAll();
+    }
+    // 查看每行输入是否都符合条件，是的话，注册按钮可点击，每输入一行信息检查一次
+    function checkAll()
+    {
+        var sum=i1+i2+i3+i4;
+        console.log("sumAll:"+sum);
+        if(sum==4)
+        {
+            document.getElementById("login").disabled = false;
+        }
+    }
+    // 刷新验证码
+    function refresh() {
+        document.getElementById('captcha_img').src="/kaptcha?"+Math.random();
+    }
+</script>
+
+</html>
